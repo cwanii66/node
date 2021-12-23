@@ -18,37 +18,44 @@ const handleBlogRouter = function(req, res) {
     }
     // get blog detail
     if (method === 'GET' && req.path === '/api/blog/detail') {
-        const data = getDetail(id);
-        return new SuccessModel(data);
+        const result = getDetail(id);
+        return result.then(blogDetail => {
+            return new SuccessModel(blogDetail);
+        });
     }
     // post new blog
     if (method === 'POST' && req.path === '/api/blog/new') {
-        const blogData = req.body;
-        const data = newBlog(blogData);
-        return new SuccessModel(data);
-
+        req.body.author = 'jack'; // 假数据，待开发 -- 登录时再改成真实数据
+        const result = newBlog(req.body);
+        return result.then(newBlogData => {
+            return new SuccessModel(newBlogData);
+        });
     }
 
     // post update blog
     if (method === 'POST' && req.path === '/api/blog/update') {
-        const blogData = req.body ?? {};
-        const data = updateBlog(blogData, id);
-        if (data.msg) {
-            return new SuccessModel(data);
-        } else {
-            return new ErrorModel(data);
-        }
-        
+        const result = updateBlog(req.body, id);
+        return result.then(updateMsg => {
+            if (updateMsg) {
+                return new SuccessModel(updateMsg);
+            } else {
+                return new ErrorModel('更新博客失败');
+            }
+        })
+            .catch(updateErrMsg => console.log(updateErrMsg));
     }
 
     // post delete blog
     if (method === 'POST' && req.path === '/api/blog/del') {
-        const result = delBlog(id);
-        if (result) {
-            return new SuccessModel();
-        } else {
-            return new ErrorModel('删除失败');
-        }
+        const author = '张三'; // 假数据，开发登录时修改
+        const result = delBlog(id, author);
+        return result.then(deleteMsg => {
+            if (deleteMsg) {
+                return new SuccessModel(deleteMsg);
+            } else {
+                return new ErrorModel('删除博客失败');
+            }
+        });
     }
 }
 

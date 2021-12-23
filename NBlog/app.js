@@ -16,7 +16,7 @@ const getPostData = (req) => {
         let postData = '';
         req.on('data', chunk => {
             postData += chunk.toString();
-        })
+        });
         req.on('end', () => {
             if (!postData) {
                 resolve({});
@@ -25,7 +25,7 @@ const getPostData = (req) => {
             resolve(
                 JSON.parse(postData)
             )
-        })
+        });
     })
 }
 

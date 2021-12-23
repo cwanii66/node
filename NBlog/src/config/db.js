@@ -24,7 +24,7 @@ switch(env) {
         }
         break;
     default:
-        throw new Error('now matched env...');
+        throw new Error('no matched env...');
 
 }
 
