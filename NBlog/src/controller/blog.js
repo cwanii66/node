@@ -74,6 +74,7 @@ const delBlog = async (deleteId, author) => {
     `;
     try {
         const deleteData = await execute(sql_delete);
+
         if (deleteData.affectedRows > 0) {
             return true;
         }
