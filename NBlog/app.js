@@ -61,11 +61,17 @@ const serverHandler = function(req, res) {
         }
 
         // 处理user路由
-        const userData = handleUserRouter(req, res);
-        if (userData) {
-            res.end(
-                JSON.stringify(userData)
-            );
+        // controller => router => app
+        const userResult = handleUserRouter(req, res);
+        if (userResult) {
+            userResult.then(userData => {
+                if (userData) {
+                    res.end(
+                        JSON.stringify(userData)
+                    );
+                    return;
+                }
+            });
             return;
         }
 
