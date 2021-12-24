@@ -1,6 +1,6 @@
 const { execute } = require('../db/mysql');
 
-const verifyLogin = async (username, password) => {
+const login = async (username, password) => {
     const sql_login = `
         select username, realname from users
             where username = '${username}' and password = '${password}';
@@ -12,5 +12,5 @@ const verifyLogin = async (username, password) => {
 }
 
 module.exports = {
-    verifyLogin
+    login
 }

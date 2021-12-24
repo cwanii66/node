@@ -48,8 +48,8 @@ const serverHandler = function(req, res) {
             return;
         }
         const entries = item.split('=');
-        const key = entries[0];
-        const value = entries[1];
+        const key = entries[0].trim();
+        const value = entries[1].trim();
         req.cookie[key] = value;
     });
     console.log('req.cookie is ', req.cookie);
