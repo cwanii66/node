@@ -3,6 +3,16 @@ const querystring = require('querystring');
 const handleBlogRouter = require('./src/router/blog');
 const handleUserRouter = require('./src/router/user');
 
+// session 数据
+const SESSION_DATA = {};
+
+// 获取cookie过期时间
+const getCookieExpires = function() {
+    const date = new Date();
+    date.setTime(date.getTime() + (24 * 60 * 60 * 1000));
+    return date.toGMTString();
+};
+
 const getPostData = (req) => {
     return new Promise((resolve) => {
         if (req.method !== 'POST') {
@@ -27,7 +37,7 @@ const getPostData = (req) => {
             )
         });
     })
-}
+};
 
 const serverHandler = function(req, res) {
     // set JSON type
@@ -52,7 +62,21 @@ const serverHandler = function(req, res) {
         const value = entries[1].trim();
         req.cookie[key] = value;
     });
-    console.log('req.cookie is ', req.cookie);
+    
+    // 解析 session
+    let needSetCookie = false;
+    let userId = req.cookie.userid;
+    if (userId) {
+        if (!SESSION_DATA[userId]) {
+            SESSION_DATA[userId] = {};
+        }
+    } else {
+        needSetCookie = true;
+        userId = `${Date.now()}_${Math.random()}`;
+        SESSION_DATA[userId] = {};
+    }
+    req.session = SESSION_DATA[userId];
+    console.log(req.session);
 
     // 处理post data
     getPostData(req).then(postData => {
@@ -64,6 +88,10 @@ const serverHandler = function(req, res) {
         const blogResult = handleBlogRouter(req, res);
         if (blogResult) {
             blogResult.then(blogData => {
+                if (needSetCookie) {
+                    // 操作cookie
+                    res.setHeader('set-Cookie', `userid=${userId}; path=/; httpOnly; expires=${getCookieExpires()}`);
+                }
                 if (blogData) {
                     res.end(
                         JSON.stringify(blogData)
@@ -79,6 +107,11 @@ const serverHandler = function(req, res) {
         const userResult = handleUserRouter(req, res);
         if (userResult) {
             userResult.then(userData => {
+                if (needSetCookie) {
+                    // 操作cookie
+                    res.setHeader('set-Cookie', `userid=${userId}; path=/; httpOnly; expires=${getCookieExpires()}`);
+                }
+
                 if (userData) {
                     res.end(
                         JSON.stringify(userData)
