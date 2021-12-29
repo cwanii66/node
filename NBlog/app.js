@@ -76,7 +76,7 @@ const serverHandler = function(req, res) {
         SESSION_DATA[userId] = {};
     }
     req.session = SESSION_DATA[userId];
-    console.log(req.session);
+    // console.log(req.session);
 
     // 处理post data
     getPostData(req).then(postData => {

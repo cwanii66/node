@@ -2,6 +2,7 @@ const env = process.env.NODE_ENV ?? 'dev'; // 环境参数 ==> NODE_ENV 是我�
 
 // 配置
 let MYSQL_CONFIG = {};
+let REDIS_CONFIG = {};
 
 switch(env) {
     case 'dev':
@@ -11,7 +12,12 @@ switch(env) {
             user: 'root',
             password: 'password',
             database: 'myblog'
-        }
+        };
+        // redis config
+        REDIS_CONFIG = {
+            port: 6379,
+            host: '127.0.0.1'
+        };
         break;
     case 'production':
         // 生产环境部署到线上，不应该用这个配置，只是暂时占位
@@ -21,7 +27,11 @@ switch(env) {
             user: 'root',
             password: 'password',
             database: 'myblog'
-        }
+        };
+        REDIS_CONFIG = {
+            port: 6379,
+            host: '127.0.0.1'
+        };
         break;
     default:
         throw new Error('no matched env...');
@@ -29,5 +39,6 @@ switch(env) {
 }
 
 module.exports = {
-    MYSQL_CONFIG
+    MYSQL_CONFIG,
+    REDIS_CONFIG
 }
