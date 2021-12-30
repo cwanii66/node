@@ -16,13 +16,12 @@ const set = function(key, value) {
 const get = async function(key) {
     const value = await redisClient.get(key)
                             .catch(e => console.error(e));
-    
+    // 数据统一化 => JSON
     try {
-        JSON.parse(value);
+        return JSON.parse(value);
     } catch(e) {
         console.log('parse error: can not parse value')
     }
-    return value;
 };
 
 module.exports = {
