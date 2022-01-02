@@ -1,3 +1,4 @@
+const xss = require('xss');
 const { execute } = require('../db/mysql');
 
 const getList = (author, keyword) => { // 获取博客列表我们只需要个author&keyword就行
@@ -30,8 +31,9 @@ const getDetail = async id => {
 
 const newBlog = async (blogData = {}) => {
     // blogData 是一个博客对象，包含title, content, author等属性
+    const title = xss(blogData.title);
+    console.log(title);
     const {
-        title,
         content,
         author,
     } = blogData;

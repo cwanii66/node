@@ -1,14 +1,17 @@
-const { execute } = require('../db/mysql');
+const { execute, escape } = require('../db/mysql');
 
 const login = async (username, password) => {
+    username = escape(username);
+    password = escape(password);
+
     const sql_login = `
         select username, realname from users
-            where username = '${username}' and password = '${password}';
+            where username = ${username} and password = ${password};
     `;
+    console.log(sql_login);
     // select 返回的全都是 数组
     const rows = await execute(sql_login);
-    return rows[0] ?? {};
-    
+    return rows[0] ?? {}; 
 }
 
 module.exports = {

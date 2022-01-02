@@ -22,5 +22,6 @@ const execute = function(sql) {
 // 我们只是多次运用exec函数, connect 对象是一个单例对象, 它不会重复建立
 
 module.exports = {
-    execute
+    execute,
+    escape: mysql.escape
 };
