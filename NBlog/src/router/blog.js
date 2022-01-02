@@ -90,7 +90,7 @@ const handleBlogRouter = function(req, res) {
             return loginCheckResult;
         }
 
-        const author = req.session.username; // 假数据，开发登录时修改
+        const author = req.session.username;
         const result = delBlog(id, author);
         return result.then(deleteMsg => {
             if (deleteMsg) {
