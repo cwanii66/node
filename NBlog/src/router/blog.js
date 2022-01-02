@@ -8,7 +8,7 @@ const loginCheck = function(req) { // 只是为了拦截未登录的用户
             new ErrorModel('尚未登录')
         );
     }
-};
+}; // 没有登录没有权限做任何操作，提示将会有前端展示
 
 
 const handleBlogRouter = function(req, res) {
@@ -17,11 +17,22 @@ const handleBlogRouter = function(req, res) {
     
     // get blog list
     if (method === 'GET' && req.path === '/api/blog/list') {
-        const author = req.query.author || '';
+        let author = req.query.author || '';
         const keyword = req.query.keyword || '';
         // const listData = getList(author, keyword);
 
         // return new SuccessModel(listData);
+        if (req.query.isadmin) {
+            // 管理员界面
+            const loginCheckResult = loginCheck(req);
+            if (loginCheckResult) {
+                // 未登录
+                return loginCheckResult;
+            }
+            // 强制查询自己的博客
+            author = req.session.username;
+        }
+
         const result = getList(author, keyword);
         return result.then(listData => {
             return new SuccessModel(listData);
