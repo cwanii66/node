@@ -1,8 +1,10 @@
 // const { resolve } = require('path');
 const querystring = require('querystring');
 const { get, set } = require('./src/db/redis');
+const { access } = require('./src/utils/log');
 const handleBlogRouter = require('./src/router/blog');
 const handleUserRouter = require('./src/router/user');
+const { Agent } = require('http');
 
 // session 数据
 // const SESSION_DATA = {};
@@ -41,6 +43,11 @@ const getPostData = (req) => {
 };
 
 const serverHandler = function(req, res) {
+    // 记录 access log
+    access(`
+        ${req.method} -- ${req.url} -- ${req.headers['user-agent']} -- ${Date.now()}
+    `);
+
     // set JSON type
     res.setHeader('Content-type', 'application/json');
 
