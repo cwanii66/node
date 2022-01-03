@@ -31,6 +31,7 @@ const getDetail = async id => {
 
 const newBlog = async (blogData = {}) => {
     // blogData 是一个博客对象，包含title, content, author等属性
+    // 转义 blogData.title
     const title = xss(blogData.title);
     console.log(title);
     const {
