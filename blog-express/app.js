@@ -1,6 +1,7 @@
 var createError = require('http-errors');
 var express = require('express');
 var path = require('path');
+var fs = require('fs');
 var cookieParser = require('cookie-parser');
 var logger = require('morgan');
 const session = require('express-session');
@@ -14,7 +15,24 @@ var app = express(); // init app instance
 // app.set('views', path.join(__dirname, 'views'));
 // app.set('view engine', 'jade');
 
-app.use(logger('dev'));
+const ENV = process.env.NODE_ENV;
+if (ENV !== 'production') {
+  // 开发环境 或 测试环境
+  app.use(logger('dev', {
+    stream: process.stdout
+  }));
+} else {
+  // 线上环境(production)
+  const logFileName = path.join(__dirname, 'logs', 'access.log');
+  const writeStream = fs.createWriteStream(logFileName, {
+    flags: 'a'
+  });
+  app.use(logger('combined', {
+    stream: writeStream
+  }));
+}
+
+
 app.use(express.json());
 app.use(express.urlencoded({ extended: false })); // postman x-www-form-urlencode test
 app.use(cookieParser());
