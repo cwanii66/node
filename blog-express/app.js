@@ -4,7 +4,7 @@ var path = require('path');
 var cookieParser = require('cookie-parser');
 var logger = require('morgan');
 const session = require('express-session');
-
+const RedisStore = require('connect-redis')(session); // 拿到对应指定session的RedisStore类
 const blogRouter = require('./routes/blog');
 const userRouter = require('./routes/user');
 
@@ -20,13 +20,19 @@ app.use(express.urlencoded({ extended: false })); // postman x-www-form-urlencod
 app.use(cookieParser());
 // app.use(express.static(path.join(__dirname, 'public')));
 
+const redisClient = require('./db/redis');
+const sessionStore = new RedisStore({
+  client: redisClient
+});
+
 app.use(session({
   secret: 'cwluvani_123',
   cookie: {
     // path: '/', // default
     // httpOnly: true, // default
     maxAge: 24 * 60 * 60 * 1000
-  }
+  },
+  store: sessionStore // session 存在 redis中
 }));
 
 // init root
