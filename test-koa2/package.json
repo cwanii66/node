@@ -1,0 +1,9 @@
+{
+  "name": "test-koa2",
+  "version": "1.0.0",
+  "main": "app.js",
+  "license": "MIT",
+  "dependencies": {
+    "koa": "^2.13.4"
+  }
+}
