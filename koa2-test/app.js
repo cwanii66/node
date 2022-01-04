@@ -4,7 +4,10 @@ const views = require('koa-views')
 const json = require('koa-json')
 const onerror = require('koa-onerror')
 const bodyparser = require('koa-bodyparser')
-const logger = require('koa-logger')
+const path = require('path');
+const fs = require('fs');
+const logger = require('koa-logger') // just beautify console
+const morgan = require('koa-morgan');
 const session = require('koa-generic-session');
 const redisStore = require('koa-redis');
 
@@ -37,6 +40,24 @@ app.use(async (ctx, next) => {
   const ms = new Date() - start // 耗时
   console.log(`${ctx.method} ${ctx.url} - ${ms}ms`)
 })
+
+const ENV = process.env.NODE_ENV; // 匹配环境
+if (ENV !== 'production') {
+  // dev mode
+  app.use(morgan('dev', {
+    stream: process.stdout
+  }));
+} else {
+  // production mode
+  // write in access.log
+  const logfileName = path.join(__dirname, 'logs', 'access.log'); 
+  const writeStream = fs.createWriteStream(logfileName, {
+    flags: 'a'
+  });
+  app.use(morgan('combined', {
+    stream: writeStream
+  }));
+}
 
 // session 配置
 app.keys = ['fads_da23a83'];
