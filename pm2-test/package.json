@@ -1,0 +1,14 @@
+{
+  "name": "pm2-test",
+  "version": "1.0.0",
+  "main": "index.js",
+  "license": "MIT",
+  "scripts": {
+    "dev": "cross-env NODE_ENV=dev nodemon index.js",
+    "prd": "cross-env NODE_ENV=production pm2 start index.js"
+  },
+  "dependencies": {
+    "cross-env": "^7.0.3",
+    "nodemon": "^2.0.15"
+  }
+}
