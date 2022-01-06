@@ -3,6 +3,8 @@ const mongoose = require("mongoose");
 const url = "mongodb://localhost:27017";
 const dbName = "myblog";
 
+mongoose.set('useFindAndModify', false);
+
 // Once connected, the open event is fired on the Connection instance.
 // If you're using mongoose.connect, the Connection is mongoose.connection.
 // Otherwise, mongoose.createConnection return value is a Connection.
