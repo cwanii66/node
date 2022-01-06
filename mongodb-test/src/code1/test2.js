@@ -12,6 +12,8 @@ const mongoClient = new MongodbClient(
     }
 );
 
+// put all of async manipulation into try/catch/finally block
+    // make sure async function executing...
 const main = async function() {
     // use connect method to connect to the server
     mongoClient.connect(); // params ?
@@ -21,28 +23,45 @@ const main = async function() {
     const blogscollection = db.collection('users'); // locate document
     // the following, we could manage document of collection ...
     // database => collection => document
+    try {
+        // add
+        // const insertMsg = await blogscollection.insertOne({
+        //     username: 'chriswong',
+        //     password: 123,
+        //     realname: 'cwluvani'
+        // }).catch( e => console.log(e) );
+        // console.log(insertMsg);
 
-    // select
-    blogscollection.find({
-        username: 'rose',
-        password: '123'
-    }).toArray((err, result) => {
-        if (err) {
-            console.log('users find error: ', err);
-            return;
-        }
-        console.log(result);
+        // altar
+        // const updateMsg = await blogscollection.updateMany({ // 查询条件 => 支持各种complex query
+        //     username: 'chriswong',
+        //     realname: 'cwluvani'
+        // }, {
+        //     $set: { // 修改
+        //         username: 'cwluvani',
+        //         realname: 'chriswong'
+        //     }
+        // }).catch( e => console.error(e) );
+        // console.log(updateMsg);
+
+        // delete
+        // const deleteMsg = await blogscollection.deleteOne({
+        //     password: 123
+        // }).catch( e => console.log(e) );
+        // console.log(deleteMsg);
+
+        // select
+        const selectMsg = await blogscollection.find({
+            password: 123
+        }).toArray()
+            .catch( e => console.error(e) );
+        console.log(selectMsg);
         
-        mongoClient.close();
-    });
-    // blogscollection.insertMany([
-    //     {
-    //         info: {
-    //             test: 'test2',
-    //             author: 'null'
-    //         }
-    //     }
-    // ]);
+    } catch( err ) {
+        console.error(err);
+    }
+
+    mongoClient.close();
 
     return 'db done';
 };
